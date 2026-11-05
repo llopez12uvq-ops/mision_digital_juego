@@ -68,7 +68,7 @@ footer{color:#8caeba;text-align:center;padding:35px 0 10px;font-size:12px;line-h
 <div class="rule"><span class="symbol">🏆</span><div><strong>Conseguí 5 insignias</strong><small>Completá desafíos y el memotest para coleccionarlas.</small></div></div>
 </div>
 <section class="badge-section" id="collection"><div class="badge-head"><div><div class="eyebrow">Tus logros</div><h2>🏅 Mi colección de insignias</h2><p>Jugá, desbloqueá y completá la colección.</p></div><div class="badge-count" id="badgeCount">0 / 5 desbloqueadas</div></div><div class="badge-grid" id="badgeGrid"></div></section>
-<section class="ranking" id="ranking"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h3>🏆 Tabla de jugadores</h3><button type="button" id="refreshRanking" class="secondary" style="padding:9px 14px;font-size:13px">↻ Actualizar tabla</button></div><p>Los mejores puntajes de Misión Digital.</p><div class="ranking-list" id="rankingList"></div><div class="rank-note" id="syncStatus" role="status">Ranking compartido pendiente de activación.</div></section>
+<section class="ranking" id="ranking"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h3>🏆 Tabla de jugadores</h3><button type="button" id="refreshRanking" class="secondary" style="padding:9px 14px;font-size:13px">↻ Actualizar tabla</button></div><p>Los mejores puntajes de Misión Digital. <small style='color:#8ebec7'>Versión 2.3</small></p><div class="ranking-list" id="rankingList"></div><div class="rank-note" id="syncStatus" role="status">Comprobando ranking compartido…</div><details style="margin-top:12px;color:#bed8e2;font-size:12px"><summary style="cursor:pointer">Diagnóstico de la conexión</summary><p id="connectionDetail" style="white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55">Sin consultar todavía.</p><button class="secondary" type="button" id="testConnection" style="padding:8px 12px;font-size:12px">Probar conexión</button> <a id="openService" href="#" target="_blank" rel="noopener noreferrer" style="color:#8df0c2">Abrir respuesta del servidor</a></details></section>
 </section>
 <section class="stage" id="challenge" aria-live="polite">
 <div class="stage-head"><div><div class="eyebrow">Modo desafío</div><h2 id="challengeTitle">Elegí la respuesta correcta</h2></div><div class="metrics"><div class="metric">⭐ <b id="score">0</b> XP</div><div class="metric">❤️ <b id="lives">3</b></div><div class="metric">🔥 <b id="streak">0</b> racha</div></div></div>
@@ -131,17 +131,30 @@ let globalRanking=[];let remoteLoaded=false;let syncSequence=0;
 function statusText(message){$('syncStatus').textContent=message}
 function apiRead(alias){
   return new Promise((resolve,reject)=>{
-    if(!SCRIPT_URL){reject(new Error('Falta configurar Apps Script'));return}
-    const callback='misionRead'+Date.now()+Math.floor(Math.random()*99999);
-    const script=document.createElement('script');let finished=false;
-    const cleanup=()=>{if(finished)return;finished=true;clearTimeout(timer);delete window[callback];script.remove()};
-    const timer=setTimeout(()=>{cleanup();reject(new Error('Se agotó el tiempo de respuesta'))},12000);
-    window[callback]=payload=>{cleanup();if(payload&&payload.ok)resolve(payload);else reject(new Error(payload&&payload.error||'Respuesta inválida'))};
-    script.onerror=()=>{cleanup();reject(new Error('No se pudo consultar el servidor'))};
-    script.src=SCRIPT_URL+'?action=state&alias='+encodeURIComponent(alias||'')+'&callback='+callback+'&_='+Date.now();
+    if(!SCRIPT_URL){reject(new Error('No se configuró la URL de Apps Script'));return}
+    // Apps Script publica la lectura como JSONP; la solicitud no requiere CORS.
+    const callback='misionRead_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+    const script=document.createElement('script');
+    let finished=false,loaded=false;
+    const timer=setTimeout(()=>fail('El servidor no ejecutó la respuesta en 18 segundos. Posible bloqueo de scripts o de redirecciones.'),18000);
+    function cleanup(){if(finished)return false;finished=true;clearTimeout(timer);try{delete window[callback]}catch(e){window[callback]=undefined}script.remove();return true}
+    function fail(message){if(cleanup())reject(new Error(message))}
+    window[callback]=payload=>{
+      if(!cleanup())return;
+      if(payload&&payload.ok===true)resolve(payload);
+      else reject(new Error(payload?.error||'El servidor devolvió una respuesta no válida'));
+    };
+    script.onerror=()=>fail('El navegador no pudo cargar el script de Google (red o permisos)');
+    script.onload=()=>{loaded=true;setTimeout(()=>{if(!finished)fail('El recurso cargó, pero no llamó a la función de respuesta ('+callback+').')},1200)};
+    const url=new URL(SCRIPT_URL);
+    url.searchParams.set('action','state');url.searchParams.set('alias',alias||'');
+    url.searchParams.set('callback',callback);url.searchParams.set('_',Date.now());
+    script.src=url.toString();
     document.head.appendChild(script);
   });
 }
+function connectionDetail(message){const el=$('connectionDetail');if(el)el.textContent=message}
+
 function mergeRemote(remote){
   if(!player||!remote)return;
   const local=profile();
@@ -158,11 +171,12 @@ async function refreshCloud(){
   const alias=player,seq=++syncSequence;statusText('Actualizando tabla de posiciones…');
   try{
     const res=await apiRead(alias);
+    connectionDetail('✓ Conexión pública correcta. Jugadores recibidos: '+(res.ranking||[]).length+'\nOrigen: Google Apps Script');
     globalRanking=Array.isArray(res.ranking)?res.ranking:[];
     remoteLoaded=true;
     if(seq===syncSequence&&alias===player){if(res.player)mergeRemote(res.player);renderRanking()}
     if(seq===syncSequence&&alias===player)statusText('Tabla de posiciones compartida · resultados actualizados.');
-  }catch(err){if(seq===syncSequence){statusText('No se pudo actualizar el ranking: '+(err&&err.message?err.message:'Error de conexión')+'. Intentá con ↻ Actualizar tabla.');renderRanking()}}
+  }catch(err){if(seq===syncSequence){connectionDetail('✕ '+(err?.message||String(err))+'\nComprobá que el enlace público abra incluso sin iniciar sesión.');statusText('No se pudo cargar la tabla. Abrí «Diagnóstico de la conexión» para ver la causa.');renderRanking()}}
 }
 async function saveCloud(eventType){
   if(!SCRIPT_URL||!player)return;
@@ -185,6 +199,8 @@ $('savePlayer').onclick=()=>setPlayer($('playerName').value);
 $('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')setPlayer($('playerName').value)});
 if(player){$('playerName').value=player;setPlayer(player)}else{renderBadges();renderRanking();refreshCloud()}
 $('refreshRanking').addEventListener('click', refreshCloud);
+$('testConnection').addEventListener('click',refreshCloud);
+$('openService').href=SCRIPT_URL+'?action=state&alias=Prueba&callback=testCallback';
 let toastTimer;
 function celebrate(a){const toast=$('badgeToast');toast.innerHTML='<strong>'+a.icon+' ¡Insignia desbloqueada!</strong><div>'+a.name+'</div><small>¡Tu colección sigue creciendo!</small>';toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('visible'),3300);const field=$('confetti');field.innerHTML='';for(let i=0;i<36;i++){const bit=document.createElement('i');bit.className='confetti';bit.style.left=Math.random()*100+'%';bit.style.animationDelay=Math.random()*.4+'s';bit.style.background=['#8df0c2','#ffcc62','#56cddd','#ff8d8d','#fff'][i%5];field.appendChild(bit)}setTimeout(()=>field.innerHTML='',2400)}
 function unlock(id){if(unlocked.has(id))return;unlocked.add(id);saveBadges();renderBadges();saveCloud('badge');const badge=achievements.find(a=>a.id===id);if(badge)celebrate(badge);if(id!=='expert'&&['first','explorer','brilliant','memory'].every(k=>unlocked.has(k)))setTimeout(()=>unlock('expert'),1800)}
