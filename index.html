@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Misión digital · Juego de conceptos clave</title>
+<style>
+:root{--deep:#072c40;--navy:#0e4057;--blue:#128db3;--cyan:#4fe3db;--mint:#8df0c2;--cream:#eef9fc;--ink:#153b4d;--muted:#5d7584;--gold:#ffcc62;--coral:#fb8c82}
+*{box-sizing:border-box}body{margin:0;color:#eefaff;background:#061d2a;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid var(--gold);outline-offset:4px}button:disabled{cursor:default}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 14% 16%,#14648162,transparent 33%),radial-gradient(circle at 90% 70%,#056e6b59,transparent 31%);z-index:-1}
+.app{max-width:1120px;margin:auto;padding:25px 24px 44px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:20px;border-bottom:1px solid #ffffff21}
+.brand{display:flex;align-items:center;gap:12px;font-weight:850;letter-spacing:.02em}.logo{width:38px;height:38px;display:grid;place-items:center;background:linear-gradient(145deg,#68e6de,#2689c8);border-radius:12px;color:#062c41;font-size:23px;box-shadow:0 0 25px #56dfd344}
+.top small{display:block;color:#a9ccda;font-size:12px;font-weight:500;margin-top:4px}.pill{border:1px solid #66c6db61;color:#b4f0ee;padding:8px 12px;border-radius:99px;font-size:12px;font-weight:800;white-space:nowrap}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:25px;align-items:center;padding:36px 0 25px}.eyebrow{color:var(--mint);text-transform:uppercase;letter-spacing:.19em;font-weight:850;font-size:12px}
+h1{font-size:clamp(38px,5.7vw,68px);letter-spacing:-.05em;line-height:1.025;margin:15px 0 18px}h1 em{font-style:normal;color:var(--cyan)}
+.hero p{color:#b6d4df;font-size:16px;line-height:1.75;max-width:545px}.hero-art{position:relative;min-height:285px;display:grid;place-items:center}
+.orbit{position:absolute;aspect-ratio:1;border:1px dashed #6fe1e36b;border-radius:50%;width:265px;animation:spin 30s linear infinite}
+.orbit.two{width:200px;animation-direction:reverse;border-style:solid;border-color:#82dcdb32}.orbit:before{content:"✦";position:absolute;color:var(--gold);top:-14px;left:calc(50% - 7px);font-size:25px}.crystal{width:165px;height:185px;display:grid;place-items:center;position:relative;border:2px solid #7decde8c;border-radius:28px;transform:rotate(-8deg);background:linear-gradient(145deg,#0f6686,#0a3449);box-shadow:18px 15px 0 #0b5378,0 0 80px #1ee9cf4b}.crystal span{font-size:83px;filter:drop-shadow(0 4px 12px #0006)}.floating{position:absolute;background:#092e43;border:1px solid #5ad7d184;border-radius:13px;padding:10px 14px;font-weight:800;box-shadow:0 13px 26px #0004}.floating.a{top:23px;right:10px}.floating.b{bottom:24px;left:8px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}.primary,.secondary{border:none;border-radius:14px;padding:15px 23px;font-size:15px;font-weight:850;transition:transform .16s,filter .16s}.primary{color:#06364a;background:linear-gradient(105deg,#7df3cd,#45d8e5);box-shadow:0 11px 28px #15c6d229}.secondary{color:#d4f8ff;background:#ffffff13;border:1px solid #ffffff40}.primary:hover,.secondary:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:16px}.rule{background:#ffffff0b;border:1px solid #ffffff1e;border-radius:17px;padding:17px;display:flex;align-items:center;gap:12px}.rule .symbol{font-size:24px}.rule strong{display:block;font-size:14px}.rule small{display:block;color:#abcbd7;margin-top:4px;line-height:1.45}
+.stage{display:none;margin-top:22px;background:linear-gradient(155deg,#103e55 0%,#0a3044 72%);border:1px solid #6ad7da43;border-radius:26px;padding:clamp(18px,4vw,35px);box-shadow:0 20px 70px #0004;position:relative;overflow:hidden}
+.stage.active{display:block;animation:appear .35s ease both}
+.stage-head{display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;gap:13px;margin-bottom:23px}.stage h2{font-size:clamp(23px,3vw,34px);letter-spacing:-.035em;margin:0}.metrics{display:flex;gap:10px;flex-wrap:wrap}.metric{background:#ffffff13;border:1px solid #ffffff1a;border-radius:12px;padding:9px 14px;font-size:13px;font-weight:850}.metric b{color:var(--gold)}
+.track{height:10px;border-radius:99px;background:#ffffff1a;overflow:hidden;margin-bottom:22px}.track>span{display:block;width:0;height:100%;background:linear-gradient(90deg,#77efc5,#39cadf);border-radius:inherit;transition:width .4s}
+.question-label{color:#8fead7;text-transform:uppercase;letter-spacing:.15em;font-weight:850;font-size:12px;margin:0 0 10px}
+.prompt{font-size:clamp(19px,2.7vw,27px);font-weight:720;line-height:1.55;letter-spacing:-.018em;margin:0 0 24px;max-width:830px}
+.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.option{min-height:91px;text-align:left;color:#e9f8fb;background:#ffffff0c;border:1px solid #74b3c050;border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;font-size:16px;font-weight:750;transition:background .2s,transform .15s,border-color .2s}
+.option:not(:disabled):hover{transform:translateY(-2px);background:#ffffff18;border-color:#7ceade}
+.letter{width:34px;height:34px;display:grid;place-items:center;flex:0 0 auto;border-radius:10px;background:#ffffff18;color:#a6eced;font-size:13px}
+.option.correct{background:#2cbd8952;border:2px solid #7af1be}.option.wrong{background:#e4787052;border:2px solid #ff9c8d}.option.dim{opacity:.56}
+.feedback{display:none;margin-top:20px;border-radius:15px;padding:18px;line-height:1.65;background:#082a3b;border-left:4px solid var(--mint);color:#d8f1f2}.feedback.show{display:block}.feedback.bad{border-color:var(--coral)}.feedback strong{color:#a9f4cb;display:block;margin-bottom:4px;font-size:18px}.feedback.bad strong{color:#ffafa3}
+.bottom-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;flex-wrap:wrap}.hint{color:#a4cfdd;font-size:13px}.next{display:none}
+.hidden{display:none!important}.result{text-align:center;padding:22px 8px 5px}.trophy{font-size:70px;animation:pop .6s ease}.result h2{font-size:clamp(32px,5vw,47px);margin:12px 0}.result p{line-height:1.7;color:#c3dce6;max-width:520px;margin:0 auto 22px}.big-score{font-size:50px;font-weight:900;color:var(--mint);letter-spacing:-.05em}.result .actions{justify-content:center}
+.mem-intro{color:#b6d4df;line-height:1.6;max-width:760px}.memory-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.memory-card{position:relative;min-height:128px;border:none;border-radius:15px;background:linear-gradient(145deg,#1684a1,#11516b);color:#d6ffff;padding:11px;font-size:13px;font-weight:760;line-height:1.37;box-shadow:inset 0 0 0 1px #8ce1e351;overflow-wrap:anywhere;transition:transform .18s,background .2s}.memory-card:not(:disabled):hover{transform:translateY(-3px)}.memory-card .mask{font-size:36px;color:#80eee7}.memory-card.revealed{background:#e7f8f8;color:#123b4b}.memory-card.matched{background:#4dd6a2;color:#083947}.memory-card.matched:after{content:"✓";position:absolute;top:5px;right:9px;font-weight:900}.memory-card .brief{font-size:12px;font-weight:600}
+footer{color:#8caeba;text-align:center;padding:35px 0 10px;font-size:12px;line-height:1.7}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes pop{0%{transform:scale(.65)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+@media(max-width:760px){.app{padding:17px 15px 30px}.hero{grid-template-columns:1fr;padding-top:27px}.hero-art{min-height:210px;order:-1}.orbit{width:175px}.orbit.two{width:130px}.crystal{height:130px;width:118px;border-radius:22px}.crystal span{font-size:55px}.floating{font-size:11px}.rules{grid-template-columns:1fr}.answers{grid-template-columns:1fr}.option{min-height:69px}.memory-grid{grid-template-columns:repeat(3,1fr)}.memory-card{min-height:103px;font-size:11px}.pill{display:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand"><div class="logo" aria-hidden="true">✦</div><div>MISIÓN DIGITAL<small>Plataformas, economía y transformación digital · Unidad I</small></div></div><span class="pill">DIPLOMA DE POSGRADO · UNQ</span></header>
+<section id="home">
+<div class="hero"><div><div class="eyebrow">Aprender jugando · Clase 1</div><h1>¿Cuánto sabés de la <em>economía digital?</em></h1><p>Entrá en la misión, descubrí conceptos clave y poné a prueba tus conocimientos. Cada respuesta suma. Cada error es una oportunidad para aprender.</p>
+<div class="actions"><button class="primary" id="start">▶ Iniciar desafío</button><button class="secondary" id="startMemory">▦ Jugar al memotest</button></div></div>
+<div class="hero-art" aria-hidden="true"><div class="orbit"></div><div class="orbit two"></div><div class="crystal"><span>🧠</span></div><div class="floating a">✧ +100 XP</div><div class="floating b">⚡ Nivel 1</div></div></div>
+<div class="rules">
+<div class="rule"><span class="symbol">🎯</span><div><strong>10 desafíos sorpresa</strong><small>Elegí el concepto que corresponde a cada pista.</small></div></div>
+<div class="rule"><span class="symbol">❤️</span><div><strong>3 vidas por partida</strong><small>Respondé, sumá puntos y mantené tu racha.</small></div></div>
+<div class="rule"><span class="symbol">🏆</span><div><strong>Desbloqueá tu insignia</strong><small>Terminá la misión y descubrí tu resultado.</small></div></div>
+</div>
+</section>
+<section class="stage" id="challenge" aria-live="polite">
+<div class="stage-head"><div><div class="eyebrow">Modo desafío</div><h2 id="challengeTitle">Elegí la respuesta correcta</h2></div><div class="metrics"><div class="metric">⭐ <b id="score">0</b> XP</div><div class="metric">❤️ <b id="lives">3</b></div><div class="metric">🔥 <b id="streak">0</b> racha</div></div></div>
+<div class="track"><span id="fill"></span></div><div id="playContent"></div><div class="bottom-actions" id="gameFoot"><span class="hint" id="counter">Pregunta 1 de 10</span><button class="primary next" id="next">Continuar →</button><button class="secondary" id="exit">Salir del juego</button></div>
+</section>
+<section class="stage" id="memory">
+<div class="stage-head"><div><div class="eyebrow">Modo memoria</div><h2>Encontrá las parejas</h2></div><div class="metrics"><div class="metric">🧩 <b id="pairs">0</b>/6</div><div class="metric">↻ <b id="moves">0</b> intentos</div></div></div>
+<p class="mem-intro">Destapá dos cartas por turno. Uní cada concepto con la descripción que le corresponde. ¡Observá, recordá y encontrá las seis parejas!</p><div class="memory-grid" id="memoryGrid"></div>
+<div class="bottom-actions"><span class="hint" id="memoryStatus" aria-live="polite">Elegí una tarjeta para comenzar.</span><div class="actions"><button class="secondary" id="restartMemory">Reiniciar parejas</button><button class="secondary" id="exitMemory">Salir del juego</button></div></div>
+</section>
+<footer>Actividad interactiva basada en Paz, S. (2021). <i>Economía digital: el futuro ya llegó</i> (Introducción).<br>Diploma de Posgrado en Negocios Digitales · Universidad Nacional de Quilmes</footer>
+</div>
+<script>
+const data=[
+{t:'Economía digital',c:'Fundamentos',d:'Conjunto de transformaciones en la producción, el consumo, la distribución y las relaciones económicas impulsadas por Internet, la información y las tecnologías digitales.'},
+{t:'Revolución digital',c:'Fundamentos',d:'Cambio profundo y acelerado de las actividades económicas y de la vida cotidiana a partir de la incorporación generalizada de tecnologías digitales.'},
+{t:'Internet',c:'Fundamentos',d:'Principal catalizador de la revolución digital: conecta a personas y organizaciones a escala mundial y amplifica la circulación de información y las actividades económicas.'},
+{t:'Información y datos',c:'Fundamentos',d:'Recursos intangibles centrales de la economía digital. Su generación, almacenamiento, circulación y análisis adquieren un peso decisivo en la actividad económica.'},
+{t:'Infraestructura material',c:'Fundamentos',d:'Base física que sostiene lo digital: silicio, chips, circuitos, dispositivos y redes. La economía digital depende de componentes materiales, aunque intercambie bienes intangibles.'},
+{t:'Adopción tecnológica acelerada',c:'Transformaciones',d:'Las tecnologías digitales alcanzan a grandes cantidades de personas en plazos cada vez más breves respecto de innovaciones de revoluciones anteriores.'},
+{t:'Pandemia como acelerador',c:'Transformaciones',d:'El Covid-19 intensificó prácticas que ya existían: compras en línea, pagos digitales, trabajo remoto y educación mediada por tecnologías.'},
+{t:'Plataformas digitales',c:'Transformaciones',d:'Entornos organizados por empresas que articulan interacciones, intercambios y actividades. Facilitan la coordinación, pero también pueden concentrar poder económico.'},
+{t:'Concentración económica',c:'Riesgos',d:'Proceso por el que unas pocas grandes empresas digitales reúnen una porción considerable del poder económico y de las interacciones que ocurren en plataformas.'},
+{t:'Activos intelectuales',c:'Transformaciones',d:'Conocimientos, patentes y secretos comerciales que ganan centralidad en la gestión y en el poder de las empresas digitales, junto a sus activos físicos.'},
+{t:'Comercio electrónico',c:'Aplicaciones',d:'Intercambio de bienes físicos, servicios y bienes digitales mediante plataformas y redes. Reduce costos de búsqueda y amplía la participación de distintos agentes.'},
+{t:'Logística y pagos digitales',c:'Aplicaciones',d:'Sistemas de distribución y de pago que hacen viables las transacciones en línea. Junto con la información confiable, son condiciones esenciales para el comercio electrónico.'},
+{t:'Reputación digital',c:'Aplicaciones',d:'Confianza y reconocimiento que se construyen a través de calificaciones, estrellas o puntajes; ayudan a decidir con quién interactuar y pueden funcionar como capital dentro de una plataforma.'},
+{t:'Inteligencia artificial',c:'Aplicaciones',d:'Tecnología que puede asistir en el análisis de grandes volúmenes de datos, la identificación de patrones y la integración de información para resolver problemas complejos.'},
+{t:'Robótica y automatización',c:'Aplicaciones',d:'Uso de robots y sistemas automatizados para realizar tareas, incluidas las que exigen gran fuerza o precisión. Modifica la organización del trabajo.'},
+{t:'Desempleo tecnológico',c:'Riesgos',d:'Pérdida o sustitución de puestos y tareas laborales por la incorporación de máquinas y procesos automatizados; puede profundizar la precariedad y la desigualdad.'},
+{t:'Privacidad y riesgos digitales',c:'Riesgos',d:'La expansión digital también expone a ciberdelincuencia, acoso, circulación de noticias falsas y usos poco transparentes de los datos personales.'},
+{t:'Brechas y desigualdades',c:'Riesgos',d:'Las tecnologías pueden favorecer el desarrollo y la productividad, pero sus beneficios no se distribuyen necesariamente de forma igual entre regiones, sectores y personas.'},
+{t:'Educación mediada por tecnologías',c:'Transformaciones',d:'Transformación de las prácticas educativas mediante TIC y herramientas digitales; la pandemia aceleró su extensión y plantea preguntas sobre enseñanza y educación superior.'},
+{t:'Igualdad de género en lo digital',c:'Riesgos',d:'Dimensión social de la revolución digital: el autor plantea que su potencial transformador debe incluir los derechos de las mujeres, la igualdad y una redistribución del poder.'}
+];
+const $=id=>document.getElementById(id);
+const shuffle=a=>{let b=[...a];for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b};
+let questions=[],step=0,xp=0,lives=3,streak=0,answered=false;
+function show(section){['home','challenge','memory'].forEach(id=>$(id).classList.toggle('active',id===section));$('home').style.display=section==='home'?'':'none';window.scrollTo({top:0,behavior:'smooth'})}
+function start(){questions=shuffle(data.map((_,i)=>i)).slice(0,10);step=0;xp=0;lives=3;streak=0;show('challenge');$('gameFoot').classList.remove('hidden');updateHud();present()}
+function updateHud(){$('score').textContent=xp;$('lives').textContent=lives;$('streak').textContent=streak;$('fill').style.width=(step/questions.length*100)+'%'}
+function present(){answered=false;updateHud();$('next').style.display='none';$('counter').textContent='DESAFÍO '+(step+1)+' DE '+questions.length;const i=questions[step],item=data[i];let distractors=shuffle(data.map((_,j)=>j).filter(j=>j!==i));let options=shuffle([i,...distractors.slice(0,3)]);$('challengeTitle').textContent='¿Cuál es el concepto?';$('playContent').innerHTML='<p class="question-label">LEÉ LA PISTA Y ELEGÍ</p><p class="prompt">'+item.d+'</p><div class="answers">'+options.map((n,k)=>'<button class="option" data-answer="'+n+'"><span class="letter">'+('ABCD'[k])+'</span><span>'+data[n].t+'</span></button>').join('')+'</div><div class="feedback" id="feedback"></div>';
+document.querySelectorAll('.option').forEach(btn=>btn.addEventListener('click',()=>answer(btn,i)))}
+function answer(btn,correct){if(answered)return;answered=true;const hit=Number(btn.dataset.answer)===correct;let gained=0;if(hit){streak++;gained=100+Math.min(100,(streak-1)*25);xp+=gained}else{streak=0;lives--}document.querySelectorAll('.option').forEach(b=>{b.disabled=true;let choice=Number(b.dataset.answer);if(choice===correct)b.classList.add('correct');else if(b===btn)b.classList.add('wrong');else b.classList.add('dim')});const fb=$('feedback');fb.classList.add('show');if(!hit)fb.classList.add('bad');fb.innerHTML=hit?'<strong>✨ ¡Excelente! +'+gained+' XP</strong>Identificaste el concepto. ¡Seguí con la racha!':'<strong>💡 ¡Esta era la respuesta!</strong><b>'+data[correct].t+'</b>. Volvé a leer la pista y seguí jugando.';updateHud();$('next').style.display='inline-block';$('next').textContent=lives===0||step===questions.length-1?'Ver resultado →':'Siguiente desafío →'}
+function continueGame(){if(!answered)return;step++;if(lives===0||step>=questions.length){end();return}present()}
+function end(){updateHud();$('fill').style.width='100%';$('gameFoot').classList.add('hidden');const won=step>=questions.length&&lives>0;const emoji=won?'🏆':xp>=400?'🥈':'💫';const label=won?'¡Misión cumplida!':'¡Misión terminada!';$('challengeTitle').textContent='Tu resultado';$('playContent').innerHTML='<div class="result"><div class="trophy">'+emoji+'</div><h2>'+label+'</h2><div class="big-score">'+xp+' XP</div><p>'+(won?'Superaste los diez desafíos y ganaste la insignia «Explorador/a digital».': 'Conseguiste nuevos puntos de experiencia. Los conceptos se aprenden jugando, revisando y volviendo a intentar.')+'</p><div class="actions"><button class="primary" id="again">↻ Volver a jugar</button><button class="secondary" id="tryMemory">▦ Ir al memotest</button><button class="secondary" id="backHome">Volver al inicio</button></div></div>';$('again').onclick=start;$('tryMemory').onclick=startMemory;$('backHome').onclick=()=>show('home')}
+let deck=[],first=null,locked=false,matches=0,moves=0,turnToken=0;
+const shortDef=[
+'Internet y tecnologías digitales transforman la economía.',
+'Cambios rápidos impulsados por tecnologías digitales.',
+'Red global que conecta personas y organizaciones.',
+'Datos y conocimientos como recursos intangibles.',
+'Dispositivos, chips y redes que sostienen lo digital.',
+'Reducción de tiempos para difundir innovaciones.',
+'Pandemia que aceleró el uso cotidiano de tecnología.',
+'Empresas que organizan intercambios e interacciones.',
+'Beneficios y poder concentrados en pocas empresas.',
+'Conocimientos y patentes como activos empresariales.',
+'Compras y ventas realizadas a través de redes.',
+'Distribución y medios de pago en transacciones digitales.',
+'Confianza construida mediante calificaciones y puntajes.',
+'Análisis automatizado de grandes volúmenes de datos.',
+'Robots que realizan tareas de precisión o fuerza.',
+'Empleos sustituidos por máquinas y automatización.',
+'Datos personales expuestos y amenazas en redes.',
+'Brechas entre personas, sectores y regiones.',
+'Cambios en las prácticas de enseñanza con TIC.',
+'Igualdad y derechos de las mujeres en lo digital.'
+];
+function startMemory(){document.querySelector('#memory .result')?.remove();turnToken++;first=null;locked=false;matches=0;moves=0;let indexes=shuffle(data.map((_,i)=>i)).slice(0,6);deck=shuffle(indexes.flatMap(i=>[{id:i,kind:'term',text:data[i].t},{id:i,kind:'def',text:shortDef[i]}]));show('memory');drawMemory();$('memoryStatus').textContent='Elegí una tarjeta para comenzar.'}
+function drawMemory(){$('pairs').textContent=matches;$('moves').textContent=moves;$('memoryGrid').innerHTML=deck.map((c,i)=>'<button class="memory-card" data-i="'+i+'" aria-label="Tarjeta oculta '+(i+1)+'"><span class="mask">✦</span></button>').join('');document.querySelectorAll('.memory-card').forEach(b=>b.onclick=()=>flipMemory(Number(b.dataset.i)))}
+function flipMemory(i){if(locked)return;const tile=$('memoryGrid').children[i],card=deck[i];if(tile.disabled||tile.classList.contains('revealed'))return;tile.classList.add('revealed');tile.innerHTML='<span class="'+(card.kind==='def'?'brief':'')+'">'+card.text+'</span>';tile.setAttribute('aria-label',card.text);if(first===null){first=i;return}moves++;$('moves').textContent=moves;const other=deck[first],otherTile=$('memoryGrid').children[first];if(other.id===card.id&&other.kind!==card.kind){tile.classList.add('matched');otherTile.classList.add('matched');tile.disabled=true;otherTile.disabled=true;matches++;$('pairs').textContent=matches;first=null;$('memoryStatus').textContent=matches===6?'🏆 ¡Encontraste todas las parejas en '+moves+' intentos!':'✨ ¡Pareja encontrada!';if(matches===6){const finish=document.createElement('div');finish.className='result';finish.innerHTML='<div class="trophy">🏆</div><h2>¡Memoria digital desbloqueada!</h2><p>Completaste las seis parejas. ¿Te animás al desafío de diez preguntas?</p><button class="primary" id="memoryToChallenge">▶ Jugar desafío</button>';$('memoryGrid').after(finish);$('memoryToChallenge').onclick=start}return}locked=true;$('memoryStatus').textContent='No coinciden. ¡Intentá recordar dónde estaban!';const token=turnToken;setTimeout(()=>{if(token!==turnToken)return;tile.classList.remove('revealed');otherTile.classList.remove('revealed');tile.innerHTML='<span class="mask">✦</span>';otherTile.innerHTML='<span class="mask">✦</span>';first=null;locked=false},950)}
+$('start').onclick=start;$('startMemory').onclick=startMemory;$('next').onclick=continueGame;$('exit').onclick=()=>show('home');$('restartMemory').onclick=()=>{document.querySelector('#memory .result')?.remove();startMemory()};$('exitMemory').onclick=()=>{turnToken++;document.querySelector('#memory .result')?.remove();show('home')};
+</script></body></html>
