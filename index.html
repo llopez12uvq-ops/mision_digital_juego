@@ -68,7 +68,7 @@ footer{color:#8caeba;text-align:center;padding:35px 0 10px;font-size:12px;line-h
 <div class="rule"><span class="symbol">🏆</span><div><strong>Conseguí 5 insignias</strong><small>Completá desafíos y el memotest para coleccionarlas.</small></div></div>
 </div>
 <section class="badge-section" id="collection"><div class="badge-head"><div><div class="eyebrow">Tus logros</div><h2>🏅 Mi colección de insignias</h2><p>Jugá, desbloqueá y completá la colección.</p></div><div class="badge-count" id="badgeCount">0 / 5 desbloqueadas</div></div><div class="badge-grid" id="badgeGrid"></div></section>
-<section class="ranking" id="ranking"><h3>🏆 Tabla de jugadores</h3><p>Los mejores puntajes de Misión Digital.</p><div class="ranking-list" id="rankingList"></div><div class="rank-note" id="syncStatus" role="status">Ranking compartido pendiente de activación.</div></section>
+<section class="ranking" id="ranking"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h3>🏆 Tabla de jugadores</h3><button type="button" id="refreshRanking" class="secondary" style="padding:9px 14px;font-size:13px">↻ Actualizar tabla</button></div><p>Los mejores puntajes de Misión Digital.</p><div class="ranking-list" id="rankingList"></div><div class="rank-note" id="syncStatus" role="status">Ranking compartido pendiente de activación.</div></section>
 </section>
 <section class="stage" id="challenge" aria-live="polite">
 <div class="stage-head"><div><div class="eyebrow">Modo desafío</div><h2 id="challengeTitle">Elegí la respuesta correcta</h2></div><div class="metrics"><div class="metric">⭐ <b id="score">0</b> XP</div><div class="metric">❤️ <b id="lives">3</b></div><div class="metric">🔥 <b id="streak">0</b> racha</div></div></div>
@@ -161,8 +161,8 @@ async function refreshCloud(){
     globalRanking=Array.isArray(res.ranking)?res.ranking:[];
     remoteLoaded=true;
     if(seq===syncSequence&&alias===player){if(res.player)mergeRemote(res.player);renderRanking()}
-    statusText('Tabla de posiciones compartida · resultados actualizados.');
-  }catch(err){statusText('No se pudo actualizar el ranking. Comprobá la conexión e intentá nuevamente.');renderRanking()}
+    if(seq===syncSequence&&alias===player)statusText('Tabla de posiciones compartida · resultados actualizados.');
+  }catch(err){if(seq===syncSequence){statusText('No se pudo actualizar el ranking: '+(err&&err.message?err.message:'Error de conexión')+'. Intentá con ↻ Actualizar tabla.');renderRanking()}}
 }
 async function saveCloud(eventType){
   if(!SCRIPT_URL||!player)return;
@@ -180,10 +180,11 @@ function setPlayer(name){let val=safeName(name);if(!val){$('playerStatus').textC
 function ensurePlayer(){return setPlayer($('playerName').value)}
 function saveBadges(){if(!player)return;profile().badges=[...unlocked];persist()}
 function renderBadges(){const grid=$('badgeGrid');grid.innerHTML=achievements.map(a=>{const won=unlocked.has(a.id);return '<article class="achievement '+(won?'earned':'locked')+'" aria-label="'+a.name+' '+(won?'desbloqueada':'bloqueada')+'"><div class="medal">'+(won?a.icon:'🔒')+'</div><h3>'+a.name+'</h3><p>'+a.why+'</p><div class="stamp">'+(won?'✓ DESBLOQUEADA':'🔒 BLOQUEADA')+'</div></article>'}).join('');$('badgeCount').textContent=unlocked.size+' / '+achievements.length+' desbloqueadas'}
-function renderRanking(){let arr=Object.entries(profiles).filter(([n,p])=>n&&p&&Number.isFinite(Number(p.best))&&Number(p.played)>0).sort((a,b)=>(b[1].best||0)-(a[1].best||0)||(b[1].perfect||0)-(a[1].perfect||0)).slice(0,10);arr=(SCRIPT_URL&&remoteLoaded)?globalRanking.map(r=>[r.alias,r]):[];$('rankingList').innerHTML=arr.length?arr.map(([n,p],i)=>'<div class="rank-row"><b>'+(i+1)+'.</b><span class="rank-name">'+escapeHtml(n)+'</span><span class="rank-score">'+Number(p.best||0)+' XP</span></div>').join(''):'<p>Aún no hay resultados. ¡Podés inaugurar la tabla!</p>'}
+function renderRanking(){let arr=(SCRIPT_URL&&remoteLoaded)?globalRanking.map(r=>[r.alias,r]):[];$('rankingList').innerHTML=arr.length?arr.map(([n,p],i)=>'<div class="rank-row"><b>'+(i+1)+'.</b><span class="rank-name">'+escapeHtml(n)+'</span><span class="rank-score">'+Number(p.best||0)+' XP</span></div>').join(''):'<p>Aún no hay resultados. ¡Podés inaugurar la tabla!</p>'}
 $('savePlayer').onclick=()=>setPlayer($('playerName').value);
 $('playerName').addEventListener('keydown',e=>{if(e.key==='Enter')setPlayer($('playerName').value)});
-if(player){$('playerName').value=player;setPlayer(player)}else{renderBadges();renderRanking()}
+if(player){$('playerName').value=player;setPlayer(player)}else{renderBadges();renderRanking();refreshCloud()}
+$('refreshRanking').addEventListener('click', refreshCloud);
 let toastTimer;
 function celebrate(a){const toast=$('badgeToast');toast.innerHTML='<strong>'+a.icon+' ¡Insignia desbloqueada!</strong><div>'+a.name+'</div><small>¡Tu colección sigue creciendo!</small>';toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('visible'),3300);const field=$('confetti');field.innerHTML='';for(let i=0;i<36;i++){const bit=document.createElement('i');bit.className='confetti';bit.style.left=Math.random()*100+'%';bit.style.animationDelay=Math.random()*.4+'s';bit.style.background=['#8df0c2','#ffcc62','#56cddd','#ff8d8d','#fff'][i%5];field.appendChild(bit)}setTimeout(()=>field.innerHTML='',2400)}
 function unlock(id){if(unlocked.has(id))return;unlocked.add(id);saveBadges();renderBadges();saveCloud('badge');const badge=achievements.find(a=>a.id===id);if(badge)celebrate(badge);if(id!=='expert'&&['first','explorer','brilliant','memory'].every(k=>unlocked.has(k)))setTimeout(()=>unlock('expert'),1800)}
